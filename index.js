@@ -1,13 +1,51 @@
-/* Your Code Here */
 
-/*
- We're giving you this function. Take a look at it, you might see some usage
- that's new and different. That's because we're avoiding a well-known, but
- sneaky bug that we'll cover in the next few lessons!
+function createEmployeeRecord(employeeArray) {
+    return {
+        firstName: employeeArray[0],
+        familyName: employeeArray[1],
+        title: employeeArray[2],
+        payPerHour: employeeArray[3],
+        timeInEvents: [],
+        timeOutEvents: []
+    }
+}
 
- As a result, the lessons for this function will pass *and* it will be available
- for you to use if you need it!
- */
+function createEmployeeRecords(employeesArray) {
+    const employeeRecords = [];
+    employeesArray.forEach(employee => {
+        employeeRecords.push(createEmployeeRecord(employee));
+    });
+    return employeeRecords;
+}
+
+function createTimeInEvent(datestamp) {
+    this.timeInEvents.push({
+        type: "TimeIn",
+        hour: parseInt(datestamp.slice(-4)),
+        date: datestamp.slice(0, 10)
+    });
+    return this;
+}
+
+function createTimeOutEvent(datestamp) {
+    this.timeOutEvents.push({
+        type: "TimeOut",
+        hour: parseInt(datestamp.slice(-4)),
+        date: datestamp.slice(0, 10)
+    });
+    return this;
+}
+
+function hoursWorkedOnDate(date) {
+    const timeInHours = this.timeInEvents.find(event => event.date === date).hour;
+    const timeOutHours = this.timeOutEvents.find(event => event.date === date).hour;
+
+    return (timeOutHours - timeInHours) / 100;
+}
+
+function wagesEarnedOnDate(date) {
+    return hoursWorkedOnDate.call(this, date) * this.payPerHour;
+}
 
 const allWagesFor = function () {
     const eligibleDates = this.timeInEvents.map(function (e) {
@@ -21,3 +59,15 @@ const allWagesFor = function () {
     return payable
 }
 
+function findEmployeeByFirstName(srcArray, firstName) {
+    return srcArray.find(employee => employee.firstName === firstName);
+}
+
+function calculatePayroll(employees) {
+    let payroll = 0;
+    employees.forEach(employee => { 
+        payroll += allWagesFor.call(employee);
+    });
+
+    return payroll;
+}
